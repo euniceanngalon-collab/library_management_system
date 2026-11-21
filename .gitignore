@@ -1,0 +1,7 @@
+# Secrets and generated files must NEVER be committed (protection 11)
+config.php
+library_private/
+error.log
+*.log
+vendor/
+.env

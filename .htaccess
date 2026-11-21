@@ -1,0 +1,41 @@
+# Apache rules (XAMPP: make sure AllowOverride is All for htdocs - it is by default).
+Options -Indexes
+
+# Security headers on static files too (PHP pages send them from php/bootstrap.php).
+<IfModule mod_headers.c>
+    Header always set X-Frame-Options "DENY"
+    Header always set X-Content-Type-Options "nosniff"
+</IfModule>
+ErrorDocument 403 "Page Not Found"
+ErrorDocument 404 "Page Not Found"
+
+RewriteEngine On
+
+# 1. Opening a .php file directly in the address bar shows "Page Not Found".
+#    (Pages are reached as /login, /register ... and Apache maps them to the .php file inside.)
+RewriteCond %{THE_REQUEST} \s/[^?\s]*\.php[\s?] [NC]
+RewriteRule ^ - [R=404,L]
+
+# 2. Internal folders and private file types are never served.
+RewriteRule ^(vendor|scripts|sql)(/|$) - [R=404,L]
+RewriteRule \.(sql|md|txt|lock|json|log|sample|ini|bak)$ - [R=404,NC,L]
+RewriteRule ^composer\.(json|lock)$ - [R=404,L]
+
+# 2b. Typing a .js file in the address bar shows "Page Not Found".
+#     A <script> tag sends "Sec-Fetch-Dest: script"; the address bar sends "document".
+#     (This is only a courtesy - the browser still gets the file when a page needs it.
+#     Real protection = every rule is checked again on the server.)
+RewriteCond %{HTTP:Sec-Fetch-Dest} ^(document|iframe|frame)$ [NC]
+RewriteRule \.js$ - [R=404,L]
+
+# 3. Only these three JSON helpers inside php/ may be called by the browser.
+#    [END] stops Apache from running the rules again on the rewritten URL
+#    (with [L] the "php/ is private" rule below would block them).
+RewriteRule ^php/(check_username|keepalive|dashboard_data)$ php/$1.php [END]
+RewriteRule ^php(/|$) - [R=404,L]
+
+# 4. Clean page URLs: /login -> php/login.php (the page files live in php/).
+RewriteRule ^(index|login|logout|register|verify_otp|forgot_password|reset_password|dashboard|books|borrowings|admin|admin_users|privacy_notice)$ php/$1.php [END]
+
+# 5. The folder itself (/library_management/) opens the Home page.
+RewriteRule ^$ php/index.php [END]
