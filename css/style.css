@@ -1,0 +1,370 @@
+
+/* ========================================
+   GLOBAL SETTINGS
+======================================== */
+
+* {
+    box-sizing: border-box;
+}
+
+:root {
+    --navy: #123B63;
+    --blue: #2684C7;
+    --blue-dark: #1769AA;
+    --background: #F6F9FC;
+    --white: #FFFFFF;
+    --text: #172536;
+    --muted: #687888;
+    --border: #DDE5ED;
+    --light-blue: #EAF4FF;
+    --success-bg: #E7F8ED;
+    --success-text: #176233;
+    --error-bg: #FFEEEE;
+    --error-text: #8B1D1D;
+    --shadow: 0 5px 18px rgba(18, 59, 99, .07);
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    margin: 0;
+    background: var(--background);
+    color: var(--text);
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 16px;
+    line-height: 1.6;
+}
+
+/* ========================================
+   HEADER AND NAVIGATION
+======================================== */
+
+header {
+    background: var(--navy);
+    color: var(--white);
+    padding: 16px 5%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+    flex-wrap: wrap;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, .08);
+}
+
+header > a {
+    color: var(--white);
+    text-decoration: none;
+    font-size: 1.15rem;
+    font-weight: 800;
+}
+
+header nav {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+header nav a {
+    color: var(--white);
+    text-decoration: none;
+    padding: 8px 12px;
+    border-radius: 8px;
+    font-size: .94rem;
+    transition: background .2s ease;
+}
+
+header nav a:hover {
+    background: rgba(255, 255, 255, .16);
+}
+
+/* ========================================
+   MAIN CONTENT
+======================================== */
+
+main {
+    width: 100%;
+    max-width: 1100px;
+    min-height: 75vh;
+    margin: 30px auto;
+    padding: 0 20px;
+}
+
+h1,
+h2,
+h3,
+h4 {
+    color: var(--navy);
+    line-height: 1.3;
+}
+
+h1 {
+    font-size: clamp(1.7rem, 4vw, 2.3rem);
+}
+
+p {
+    margin-top: 0;
+}
+
+a {
+    color: var(--blue-dark);
+}
+
+a:hover {
+    color: var(--navy);
+}
+
+/* ========================================
+   CARDS AND GRID
+======================================== */
+
+.card {
+    background: var(--white);
+    padding: 26px;
+    border: 1px solid var(--border);
+    border-radius: 15px;
+    box-shadow: var(--shadow);
+    margin: 18px 0;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+}
+
+/* ========================================
+   FORMS
+======================================== */
+
+form {
+    width: 100%;
+}
+
+label {
+    display: block;
+    color: var(--navy);
+    font-weight: 700;
+    margin: 14px 0 6px;
+}
+
+input,
+select,
+textarea {
+    width: 100%;
+    padding: 12px 13px;
+    border: 1px solid #BBC7D3;
+    border-radius: 8px;
+    background: var(--white);
+    color: var(--text);
+    font: inherit;
+    outline: none;
+    transition: border-color .2s, box-shadow .2s;
+}
+
+textarea {
+    min-height: 110px;
+    resize: vertical;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+    border-color: var(--blue);
+    box-shadow: 0 0 0 3px rgba(38, 132, 199, .13);
+}
+
+input[type="checkbox"],
+input[type="radio"] {
+    width: auto;
+    margin-right: 7px;
+}
+
+input:disabled,
+select:disabled,
+textarea:disabled {
+    background: #EDF1F5;
+    cursor: not-allowed;
+}
+
+/* ========================================
+   BUTTONS
+======================================== */
+
+button,
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    background: var(--blue-dark);
+    color: var(--white);
+    border: 0;
+    padding: 11px 18px;
+    border-radius: 8px;
+    font: inherit;
+    font-weight: 700;
+    text-decoration: none;
+    cursor: pointer;
+    margin-top: 14px;
+    transition: background .2s, transform .2s;
+}
+
+button:hover,
+.btn:hover {
+    background: var(--navy);
+    color: var(--white);
+    transform: translateY(-1px);
+}
+
+button:disabled {
+    opacity: .6;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+}
+
+/* ========================================
+   NOTICES AND MESSAGES
+======================================== */
+
+.notice {
+    padding: 13px 16px;
+    border-radius: 9px;
+    background: var(--light-blue);
+    color: var(--navy);
+    border: 1px solid #D5E9FC;
+    margin: 14px 0;
+}
+
+.error {
+    background: var(--error-bg);
+    color: var(--error-text);
+    border-color: #F5D0D0;
+}
+
+.success {
+    background: var(--success-bg);
+    color: var(--success-text);
+    border-color: #CBEBD5;
+}
+
+/* ========================================
+   TABLES
+======================================== */
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background: var(--white);
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+th,
+td {
+    padding: 12px 14px;
+    border-bottom: 1px solid var(--border);
+    text-align: left;
+    vertical-align: middle;
+}
+
+th {
+    background: #EAF1F7;
+    color: var(--navy);
+    font-weight: 700;
+}
+
+tr:last-child td {
+    border-bottom: none;
+}
+
+tbody tr:hover {
+    background: #F8FBFE;
+}
+
+/* Use this wrapper around wide tables when needed */
+.table-responsive {
+    width: 100%;
+    overflow-x: auto;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+}
+
+/* ========================================
+   FOOTER
+======================================== */
+
+footer {
+    text-align: center;
+    color: var(--muted);
+    padding: 26px 18px;
+    font-size: .9rem;
+}
+
+footer a {
+    color: var(--blue-dark);
+    text-decoration: none;
+}
+
+footer a:hover {
+    text-decoration: underline;
+}
+
+/* ========================================
+   RESPONSIVE DESIGN
+======================================== */
+
+@media (max-width: 700px) {
+    header {
+        align-items: flex-start;
+        flex-direction: column;
+        padding: 15px 20px;
+    }
+
+    header nav {
+        width: 100%;
+        gap: 4px;
+    }
+
+    header nav a {
+        padding: 8px 9px;
+    }
+
+    main {
+        margin: 20px auto;
+        padding: 0 14px;
+    }
+
+    .card {
+        padding: 19px;
+    }
+
+    .grid {
+        grid-template-columns: 1fr;
+    }
+
+    .actions {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .actions .btn,
+    .actions button {
+        width: 100%;
+    }
+
+    th,
+    td {
+        padding: 10px;
+        font-size: .9rem;
+    }
+}
