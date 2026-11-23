@@ -41,6 +41,11 @@ page_start('Security Monitoring', ['barchart.js', 'dashboard.js']);
     </div>
 
     <div class="card">
+        <h2>Blocked IP addresses</h2>
+        <div class="table-scroll"><table id="blocked-ips"><thead><tr><th>IP address</th><th>Status</th><th>Blocked until</th><th>Reason</th><th>First blocked</th></tr></thead><tbody></tbody></table></div>
+    </div>
+
+    <div class="card">
         <h2>Recent events (latest 50)</h2>
         <form id="filters" class="filter-row" novalidate>
             <div><label for="f-from">From</label><input type="date" id="f-from"></div>

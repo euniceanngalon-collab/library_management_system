@@ -944,3 +944,7 @@ header { background: #14532D; }
 .site-name { background: var(--cream); color: #14532D; }
 .site-footer { background: #0F3A22; color: #DDE8E0; border-top: 3px solid #C9A227; }
 .site-footer a { color: #E9D27A; }
+
+/* Dashboard tables: keep IP addresses and times on one line so they stay readable. */
+#events td:nth-child(1), #events td:nth-child(4),
+#top-ips td:nth-child(1), #blocked-ips td { white-space: nowrap; }

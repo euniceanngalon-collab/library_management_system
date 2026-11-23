@@ -144,7 +144,7 @@ function ip_recent_failures(string $ip): int
 }
 
 /* Blocks the IP when it passes the IP block threshold. Returns true if blocked. */
-function ip_check_and_block(string $ip): bool
+function ip_check_and_block(string $ip, ?string $typed = null, ?int $userId = null): bool
 {
     global $pdo;
 
@@ -162,7 +162,7 @@ function ip_check_and_block(string $ip): bool
          ON DUPLICATE KEY UPDATE blocked_until = VALUES(blocked_until), reason = VALUES(reason)'
     );
     $stmt->execute([$ip, $until, 'Too many failed log-ins']);
-    log_event('IP_BLOCKED', 'IP passed the threshold of ' . IP_BLOCK_THRESHOLD . ' failures.');
+    log_event('IP_BLOCKED', 'IP passed the threshold of ' . IP_BLOCK_THRESHOLD . ' failures.', $userId, $typed);
 
     return true;
 }
@@ -263,7 +263,7 @@ function handle_failed_attempt(string $typed, ?array $user, string $reason): int
         }
     }
 
-    ip_check_and_block(client_ip());
+    ip_check_and_block(client_ip(), $typed, $userId);
 
     // Start the clock last: sending the email can take several seconds, and the
     // person must see (and be locked for) exactly the tier's seconds.

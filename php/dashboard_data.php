@@ -60,6 +60,12 @@ $topIps = $pdo->query(
      GROUP BY a.ip_address ORDER BY failures DESC LIMIT 5"
 )->fetchAll();
 
+/* Every IP that was ever blocked, newest first (read-only SELECT). active = 1 while the block still runs. */
+$blockedIps = $pdo->query(
+    'SELECT ip_address, blocked_until, reason, created_at, (blocked_until > NOW()) AS active
+     FROM ip_blocks ORDER BY blocked_until DESC LIMIT 20'
+)->fetchAll();
+
 $flags = $pdo->query(
     'SELECT severity, pattern, target, description, created_at
      FROM security_flags ORDER BY id DESC LIMIT 20'
@@ -109,6 +115,7 @@ json_response([
     'summary' => $summary,
     'hours'   => ['labels' => $labels, 'values' => $hours],
     'top_ips' => $topIps,
+    'blocked_ips' => $blockedIps,
     'flags'   => $flags,
     'events'  => $events,
     'types'   => $types,

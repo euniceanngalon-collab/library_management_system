@@ -76,6 +76,12 @@
             [function (r) { return r.ip_address; }, function (r) { return r.failures; },
              function (r) { return Number(r.blocked) > 0 ? 'Yes' : 'No'; }], 'No failures in 24 hours.');
 
+        fillTable('blocked-ips', data.blocked_ips || [],
+            [function (r) { return r.ip_address; },
+             function (r) { return Number(r.active) > 0 ? 'Blocked now' : 'Expired'; },
+             function (r) { return r.blocked_until; }, function (r) { return r.reason; },
+             function (r) { return r.created_at; }], 'No IP has been blocked yet.');
+
         fillTable('flags', data.flags,
             [function (r) { return r.severity; }, function (r) { return r.pattern; }, function (r) { return r.target; },
              function (r) { return r.description; }, function (r) { return r.created_at; }], 'No flags yet. Run scripts/monitor.php.');
