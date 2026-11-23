@@ -10,6 +10,15 @@
         }
     });
 
+    // Snackbar: slides in, then hides by itself after 5 seconds (or on click).
+    var snackbar = document.getElementById('snackbar');
+    if (snackbar) {
+        requestAnimationFrame(function () { snackbar.classList.add('show'); });
+        var hideSnackbar = function () { snackbar.classList.remove('show'); };
+        snackbar.addEventListener('click', hideSnackbar);
+        setTimeout(hideSnackbar, 5000);
+    }
+
     // "Show Password" checkbox: toggles every password field on the page.
     var toggle = document.getElementById('show-password');
     if (toggle) {

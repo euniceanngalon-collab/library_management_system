@@ -14,12 +14,26 @@ $lockSeconds = 0;        // account lockout countdown
 $ipLockSeconds = 0;      // IP block countdown
 $showForgot = false;
 
+/*
+| Show the waiting time even on a plain page load or refresh, not only after a POST.
+| The IP block is known from the IP alone. The account lock is looked up for the
+| username that was last typed in this browser session.
+*/
+$ip = client_ip();
+$ipLockSeconds = ip_block_remaining($ip);
+if ($_SERVER['REQUEST_METHOD'] !== 'POST' && !empty($_SESSION['login_username'])) {
+    $lockSeconds = throttle_state((string)$_SESSION['login_username'])['remaining'];
+    if ($lockSeconds > 0) {
+        $username = (string)$_SESSION['login_username'];
+    }
+}
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     require_csrf();
 
     $username = trim((string)($_POST['username'] ?? ''));
     $password = (string)($_POST['password'] ?? '');
-    $ip = client_ip();
+    $_SESSION['login_username'] = substr($username, 0, 100);
 
     $ipLockSeconds = ip_block_remaining($ip);
     $state = throttle_state($username);
@@ -102,9 +116,14 @@ page_start('Log-in', ['login.js'], true);
         <div class="notice notice-error" role="alert"><?= e($error) ?></div>
     <?php endif; ?>
 
-    <?php if ($locked): ?>
+    <?php if ($ipLockSeconds > 0 && $ipLockSeconds >= $lockSeconds): ?>
         <div class="notice notice-warning" role="status">
-            Locked. Try again in <strong id="lock-count" data-seconds="<?= (int)$countdown ?>"><?= (int)$countdown ?></strong> seconds.
+            This network is blocked for 10 minutes because of too many failed log-ins.
+            Try again in <strong id="lock-count" data-seconds="<?= (int)$ipLockSeconds ?>" data-format="clock"><?= e(gmdate('i:s', $ipLockSeconds)) ?></strong>.
+        </div>
+    <?php elseif ($locked): ?>
+        <div class="notice notice-warning" role="status">
+            Account temporarily locked. Try again in <strong id="lock-count" data-seconds="<?= (int)$lockSeconds ?>"><?= (int)$lockSeconds ?></strong> seconds.
         </div>
     <?php endif; ?>
 
@@ -130,7 +149,8 @@ page_start('Log-in', ['login.js'], true);
     <?php endif; ?>
 
     <p class="muted">No account yet?
-        <a href="register" id="register-link" class="<?= $locked ? 'link-disabled' : '' ?>">Please register here</a>
+        <a id="register-link" data-href="register"
+           <?php if ($locked): ?>class="link-disabled" aria-disabled="true" tabindex="-1"<?php else: ?>href="register"<?php endif; ?>>Please register here</a>
     </p>
 </section>
 <?php page_end();

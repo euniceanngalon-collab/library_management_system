@@ -37,6 +37,20 @@ var Validate = (function () {
         return null;
     }
 
+    function studentEmail(v) {
+    var error = email(v);
+
+    if (error !== null) {
+        return error;
+    }
+
+    if (!/@csucc\.edu\.ph$/i.test(v)) {
+        return 'Please use your CSUCC student email (@csucc.edu.ph).';
+    }
+
+    return null;
+}
+
     function username(v, min, max) {
         if (!/^[A-Za-z][A-Za-z0-9]*$/.test(v)) { return 'Username must start with a letter and contain letters and digits only.'; }
         if (v.length < min || v.length > max) { return 'Username must be ' + min + '-' + max + ' characters.'; }
@@ -54,11 +68,17 @@ var Validate = (function () {
         return 'Medium';
     }
 
-    function password(pw, min, max) {
-        if (pw.length < min || pw.length > max) { return 'Password must be ' + min + '-' + max + ' characters.'; }
-        if (strength(pw, min) === 'Weak') { return 'Password is too weak. Use upper and lower case letters, digits and symbols.'; }
-        return null;
+function password(pw, min, max) {
+    if (pw.length < min || pw.length > max) {
+        return 'Password must be ' + min + '-' + max + ' characters.';
     }
+
+    if (strength(pw, min) !== 'Strong') {
+        return 'Password must be Strong. Use uppercase and lowercase letters, numbers, and symbols.';
+    }
+
+    return null;
+}
 
     function ageFrom(dateStr) {
         var b = new Date(dateStr + 'T00:00:00');
@@ -107,8 +127,7 @@ var Validate = (function () {
         if (v.length > 100 || !/^[A-Za-z, ]+$/.test(v)) { return 'Subjects of interest may contain letters, commas and spaces only (max 100 characters).'; }
         return null;
     }
-
-    return { name: name, idNumber: idNumber, email: email, username: username, strength: strength,
-             password: password, ageFrom: ageFrom, birthdate: birthdate, place: place, street: street,
-             zip: zip, answer: answer, contact: contact, interests: interests };
+return { name: name, idNumber: idNumber, email: email, studentEmail: studentEmail, username: username, strength: strength,
+         password: password, ageFrom: ageFrom, birthdate: birthdate, place: place, street: street,
+         zip: zip, answer: answer, contact: contact, interests: interests };
 })();

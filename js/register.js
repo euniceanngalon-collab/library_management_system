@@ -13,6 +13,34 @@
     function el(id) { return document.getElementById(id); }
     function val(id) { return el(id) ? el(id).value.trim() : ''; }
 
+        // Live password strength indicator
+    var passwordInput = el('password');
+    var strengthBar = el('strength-bar');
+    var strengthLabel = el('strength-label');
+
+    function updatePasswordStrength() {
+        var password = passwordInput.value;
+        var level = password === '' ? '-' : Validate.strength(password, minPass);
+
+        strengthLabel.textContent = 'Strength: ' + level;
+
+        if (level === 'Weak') {
+            strengthBar.style.width = '25%';
+            strengthBar.style.backgroundColor = '#dc3545';
+        } else if (level === 'Medium') {
+            strengthBar.style.width = '65%';
+            strengthBar.style.backgroundColor = '#ffc107';
+        } else if (level === 'Strong') {
+            strengthBar.style.width = '100%';
+            strengthBar.style.backgroundColor = '#198754';
+        } else {
+            strengthBar.style.width = '0%';
+            strengthBar.style.backgroundColor = 'transparent';
+        }
+    }
+
+    passwordInput.addEventListener('input', updatePasswordStrength);
+
     function showError(id, message) {
         var box = form.querySelector('[data-error-for="' + id + '"]');
         if (box) { box.textContent = message || ''; }
@@ -35,7 +63,7 @@
         student_status:    function () { return val('student_status') ? null : 'Please select a valid student status.'; },
         emergency_contact: function () { return Validate.contact(val('emergency_contact')); },
         subject_interests: function () { return Validate.interests(val('subject_interests')); },
-        email:             function () { return Validate.email(val('email')); },
+        email: function () { return Validate.studentEmail(val('email')); },
         username:          function () { return Validate.username(val('username'), minUser, maxUser); },
         password:          function () { return Validate.password(el('password').value, minPass, maxPass); },
         confirm_password:  function () { return el('password').value === el('confirm_password').value ? null : 'Passwords do not match.'; },

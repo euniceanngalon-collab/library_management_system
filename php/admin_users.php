@@ -77,12 +77,18 @@ if ($search !== '') {
     array_push($params, $term, $term, $term, $term, $term);
 }
 
-$sql = 'SELECT id, student_id, first_name, last_name, username, email, role, student_status, email_verified_at
+$sql = 'SELECT id, student_id, first_name, last_name, username, email, role, student_status, email_verified_at,
+               emergency_contact_enc, emergency_contact_iv
         FROM users' . ($where ? ' WHERE ' . implode(' AND ', $where) : '') . '
         ORDER BY role, last_name, first_name LIMIT 200';
 $stmt = $pdo->prepare($sql);
 $stmt->execute($params);
 $users = $stmt->fetchAll();
+
+/* Admin-only: the list shows the DECRYPTED emergency contact, so every view is logged. */
+if ($users) {
+    log_event('EMERGENCY_CONTACT_VIEWED', 'Admin viewed the user list with emergency contacts.', (int)$_SESSION['user_id']);
+}
 
 page_start('Manage Users');
 ?>
@@ -132,6 +138,7 @@ page_start('Manage Users');
                             <th>Name</th>
                             <th>Username</th>
                             <th>Email</th>
+                            <th>Emergency Contact</th>
                             <th>Role</th>
                             <th>Verified</th>
                             <th>Status</th>
@@ -144,6 +151,14 @@ page_start('Manage Users');
                                 <td><?= e($u['first_name'] . ' ' . $u['last_name']) ?></td>
                                 <td><?= e($u['username']) ?></td>
                                 <td><?= e($u['email']) ?></td>
+                                <td>
+                                    <?php
+                                    $contact = ($u['emergency_contact_enc'] && $u['emergency_contact_iv'])
+                                        ? decrypt_field((string)$u['emergency_contact_enc'], (string)$u['emergency_contact_iv'])
+                                        : null;
+                                    echo $contact !== null ? e($contact) : '<span class="muted">Not available</span>';
+                                    ?>
+                                </td>
                                 <td><?= e(ucfirst((string)$u['role'])) ?></td>
                                 <td><?= $u['email_verified_at'] ? 'Yes' : 'No' ?></td>
                                 <td>

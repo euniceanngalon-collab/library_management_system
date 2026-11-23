@@ -52,7 +52,10 @@ function page_start(string $title, array $scripts = [], bool $needCaptcha = fals
     echo '<main class="main-content">';
 
     $flash = flash_get();
-    if ($flash) {
+    if ($flash && $flash['type'] === 'success') {
+        // Success messages pop up as a snackbar and hide by themselves (see js/common.js).
+        echo '<div id="snackbar" class="snackbar" role="status" aria-live="polite">' . e($flash['message']) . '</div>';
+    } elseif ($flash) {
         echo '<div class="notice notice-' . e($flash['type']) . '" role="status">' . e($flash['message']) . '</div>';
     }
 

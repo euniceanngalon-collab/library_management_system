@@ -948,3 +948,13 @@ header { background: #14532D; }
 /* Dashboard tables: keep IP addresses and times on one line so they stay readable. */
 #events td:nth-child(1), #events td:nth-child(4),
 #top-ips td:nth-child(1), #blocked-ips td { white-space: nowrap; }
+/* Snackbar (success messages) */
+.snackbar {
+    position: fixed; left: 50%; bottom: 28px; z-index: 1000;
+    transform: translate(-50%, 30px); opacity: 0; pointer-events: none;
+    max-width: 90%; padding: 14px 22px; border-radius: 10px;
+    background: #14532d; color: #fff; font-weight: 600;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, .25);
+    transition: opacity .3s ease, transform .3s ease;
+}
+.snackbar.show { opacity: 1; transform: translate(-50%, 0); pointer-events: auto; cursor: pointer; }

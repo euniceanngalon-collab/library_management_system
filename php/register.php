@@ -55,7 +55,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $errors['country'] = validate_title_case_place($v['country'], 'Country');
         $errors['postal_code'] = validate_zip($v['postal_code']);
 
-        $errors['email'] = validate_email($v['email']);
+        $errors['email'] = validate_student_email($v['email']);
         $errors['username'] = validate_username($v['username']);
         $errors['password'] = validate_password($password);
         $errors['confirm_password'] = ($password !== $confirm) ? 'Passwords do not match.' : null;
@@ -145,6 +145,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 if ($user === null) {
                     redirect('login');
                 }
+                flash_set('success', 'Registered successfully! Enter the code we sent to your email to verify your account.');
                 $otpError = otp_issue($user, 'register');
                 otp_flow_start($user, 'register');
                 if ($otpError !== null) {

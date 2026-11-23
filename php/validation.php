@@ -95,9 +95,24 @@ function validate_email(string $v): ?string
         || filter_var($v, FILTER_VALIDATE_EMAIL) === false) {
         return 'Please enter a valid email address.';
     }
+
     return null;
 }
 
+function validate_student_email(string $v): ?string
+{
+    $emailError = validate_email($v);
+
+    if ($emailError !== null) {
+        return $emailError;
+    }
+
+    if (strtolower(substr($v, -13)) !== '@csucc.edu.ph') {
+        return 'Please use your CSUCC student email (@csucc.edu.ph).';
+    }
+
+    return null;
+}
 function validate_username(string $v): ?string
 {
     if (!preg_match('/^[A-Za-z][A-Za-z0-9]*$/', $v)) {
@@ -137,12 +152,15 @@ function password_strength(string $pw): string
 function validate_password(string $pw): ?string
 {
     $len = strlen($pw);
+
     if ($len < MIN_PASSWORD_LENGTH || $len > MAX_PASSWORD_LENGTH) {
         return 'Password must be ' . MIN_PASSWORD_LENGTH . '-' . MAX_PASSWORD_LENGTH . ' characters.';
     }
-    if (password_strength($pw) === 'Weak') {
-        return 'Password is too weak. Use upper and lower case letters, digits and symbols.';
+
+    if (password_strength($pw) !== 'Strong') {
+        return 'Password must be Strong. Use uppercase and lowercase letters, numbers, and symbols.';
     }
+
     return null;
 }
 
