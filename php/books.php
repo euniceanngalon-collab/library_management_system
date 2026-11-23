@@ -224,6 +224,7 @@ page_start('Books');
                 <table class="books-table">
                     <thead>
                         <tr>
+                            <th>Cover</th>
                             <th>Book Title</th>
                             <th>Author</th>
                             <th>ISBN</th>
@@ -236,7 +237,24 @@ page_start('Books');
                     <tbody>
                         <?php foreach ($books as $book): ?>
                             <?php $available = (int)$book['available_copies']; ?>
+                            <?php
+                                $isbnDigits = preg_replace('/[^0-9Xx]/', '', (string)($book['isbn'] ?? ''));
+                                $coverUrl = $isbnDigits !== '' ? 'https://covers.openlibrary.org/b/isbn/' . rawurlencode($isbnDigits) . '-M.jpg' : null;
+                            ?>
                             <tr>
+                                <td>
+                                    <?php if ($coverUrl): ?>
+                                        <img
+                                            class="book-cover"
+                                            src="<?= e($coverUrl) ?>"
+                                            alt="Cover of <?= e($book['title']) ?>"
+                                            loading="lazy"
+                                            onerror="this.onerror=null;this.replaceWith(Object.assign(document.createElement('div'),{className:'book-cover book-cover-placeholder',textContent:<?= json_encode(mb_substr($book['title'], 0, 1)) ?>}));"
+                                        >
+                                    <?php else: ?>
+                                        <div class="book-cover book-cover-placeholder"><?= e(mb_substr($book['title'], 0, 1)) ?></div>
+                                    <?php endif; ?>
+                                </td>
                                 <td><strong><?= e($book['title']) ?></strong></td>
                                 <td><?= e($book['author']) ?></td>
                                 <td><?= e($book['isbn'] ?? '—') ?></td>

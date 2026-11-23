@@ -46,7 +46,7 @@ define('SMTP_SECURE', 'tls');                      // 'tls' (587), 'ssl' (465) o
 define('SMTP_USER', 'your.address@gmail.com');
 define('SMTP_PASS', 'xxxx xxxx xxxx xxxx');         // the App Password, NOT your Gmail password
 define('MAIL_FROM', 'your.address@gmail.com');
-define('MAIL_FROM_NAME', 'Library Management System');
+define('MAIL_FROM_NAME', 'Library Management System');  // shown in the "From:" line of emails
 
 /* Mailpit instead of Gmail (instructor-approved):
    SMTP_HOST '127.0.0.1', SMTP_PORT 1025, SMTP_AUTH false, SMTP_SECURE '' */

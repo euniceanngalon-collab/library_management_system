@@ -8,20 +8,20 @@
 }
 
 :root {
-    --navy: #123B63;
-    --blue: #2684C7;
-    --blue-dark: #1769AA;
-    --background: #F6F9FC;
+    --navy: #14532D;
+    --blue: #2E9E5B;
+    --blue-dark: #1F7A47;
+    --background: #F4F9F5;
     --white: #FFFFFF;
     --text: #172536;
     --muted: #687888;
     --border: #DDE5ED;
-    --light-blue: #EAF4FF;
+    --light-blue: #E8F5EC;
     --success-bg: #E7F8ED;
     --success-text: #176233;
     --error-bg: #FFEEEE;
     --error-text: #8B1D1D;
-    --shadow: 0 5px 18px rgba(18, 59, 99, .07);
+    --shadow: 0 5px 18px rgba(20,83,45, .07);
 }
 
 html {
@@ -173,7 +173,7 @@ input:focus,
 select:focus,
 textarea:focus {
     border-color: var(--blue);
-    box-shadow: 0 0 0 3px rgba(38, 132, 199, .13);
+    box-shadow: 0 0 0 3px rgba(46,158,91, .13);
 }
 
 input[type="checkbox"],

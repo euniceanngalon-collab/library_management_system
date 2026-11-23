@@ -124,7 +124,7 @@ $intro = match ($role) {
 
     </section>
 
-    <div class="dashboard-footer">Library Management and Borrowing System</div>
+    <div class="dashboard-footer">Library Management System</div>
 </div>
 
 <?php page_end(); ?>

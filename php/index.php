@@ -8,7 +8,7 @@ page_start('Home');
 
 
 <section class="home-hero">
-    <h1>Library Management and Borrowing System</h1>
+    <h1>Find, Borrow, and Return Books Easily</h1>
 
     <p>
         Your convenient way to explore library books and manage borrowing

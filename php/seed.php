@@ -34,7 +34,7 @@ const IDLE_WARNING_SECONDS      = 60;
 const RESET_AUTH_SECONDS        = 300;  // time allowed on Change Password
 
 /* Name shown above the header on EVERY page (the approved system name). */
-const APP_NAME = 'Library Management and Borrowing System';
+const APP_NAME = 'LIBRARY MANAGEMENT SYSTEM';
 /* Used in the footer: (c) 2026 <OWNER_NAME>. All rights reserved. */
 const OWNER_NAME = 'Eunice Ann S. Galon';
 

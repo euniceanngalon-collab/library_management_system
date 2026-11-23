@@ -8,12 +8,12 @@
 }
 
 .dashboard-header {
-    background: linear-gradient(135deg, #123B63, #2684C7);
+    background: linear-gradient(135deg, #14532D, #2E9E5B);
     color: #fff;
     padding: 35px;
     border-radius: 18px;
     margin-bottom: 25px;
-    box-shadow: 0 8px 25px rgba(18, 59, 99, 0.15);
+    box-shadow: 0 8px 25px rgba(20,83,45, 0.15);
 }
 
 .dashboard-header h1 {
@@ -23,7 +23,7 @@
 
 .dashboard-header p {
     margin: 0;
-    color: #e8f3ff;
+    color: #E3F3E8;
     line-height: 1.7;
 }
 
@@ -40,7 +40,7 @@
 
 .dashboard-section-title {
     margin: 30px 0 15px;
-    color: #123B63;
+    color: #14532D;
     font-size: 21px;
 }
 
@@ -64,11 +64,11 @@
 
 .dashboard-card:hover {
     transform: translateY(-4px);
-    box-shadow: 0 10px 25px rgba(18,59,99,0.10);
+    box-shadow: 0 10px 25px rgba(20,83,45,0.10);
 }
 
 .dashboard-card:focus-visible {
-    outline: 3px solid #2684C7;
+    outline: 3px solid #2E9E5B;
     outline-offset: 3px;
 }
 
@@ -79,15 +79,15 @@
     align-items: center;
     justify-content: center;
     border-radius: 12px;
-    background: #eaf4fc;
-    color: #2684C7;
+    background: #E3F3E8;
+    color: #2E9E5B;
     font-size: 23px;
     margin-bottom: 17px;
 }
 
 .dashboard-card h3 {
     margin: 0 0 8px;
-    color: #123B63;
+    color: #14532D;
     font-size: 17px;
 }
 
@@ -101,7 +101,7 @@
 .dashboard-card .card-link {
     display: inline-block;
     margin-top: 18px;
-    color: #2684C7;
+    color: #2E9E5B;
     font-size: 14px;
     font-weight: 600;
 }
@@ -130,7 +130,7 @@
         overflow: hidden;
         padding: 48px 36px;
         border-radius: 20px;
-        background: linear-gradient(135deg, #123B63, #2684C7);
+        background: linear-gradient(135deg, #14532D, #2E9E5B);
         color: #fff;
         margin-bottom: 24px;
     }
@@ -146,7 +146,7 @@
     .home-hero p {
         max-width: 600px;
         line-height: 1.8;
-        color: #eaf4ff;
+        color: #E8F5EC;
         margin-bottom: 26px;
     }
 
@@ -173,7 +173,7 @@
 
     .home-primary {
         background: #fff;
-        color: #123B63;
+        color: #14532D;
     }
 
     .home-secondary {
@@ -184,7 +184,7 @@
 
     .home-section-title {
         margin: 28px 0 16px;
-        color: #123B63;
+        color: #14532D;
     }
 
     .home-features {
@@ -198,7 +198,7 @@
         background: #fff;
         border: 1px solid #e3ebf3;
         border-radius: 16px;
-        box-shadow: 0 5px 18px rgba(18,59,99,.06);
+        box-shadow: 0 5px 18px rgba(20,83,45,.06);
     }
 
     .home-feature-icon {
@@ -209,14 +209,14 @@
         height: 48px;
         margin-bottom: 16px;
         border-radius: 12px;
-        background: #eaf4ff;
-        color: #123B63;
+        background: #E8F5EC;
+        color: #14532D;
         font-size: 24px;
     }
 
     .home-feature h3 {
         margin: 0 0 10px;
-        color: #123B63;
+        color: #14532D;
     }
 
     .home-feature p {
@@ -253,12 +253,12 @@
 }
 
 .books-header {
-    background: linear-gradient(135deg, #123B63, #2684C7);
+    background: linear-gradient(135deg, #14532D, #2E9E5B);
     color: white;
     padding: 30px;
     border-radius: 18px;
     margin-bottom: 22px;
-    box-shadow: 0 8px 25px rgba(18, 59, 99, 0.12);
+    box-shadow: 0 8px 25px rgba(20,83,45, 0.12);
 }
 
 .books-header h1 {
@@ -268,7 +268,7 @@
 
 .books-header p {
     margin: 0;
-    color: #e8f3ff;
+    color: #E3F3E8;
     line-height: 1.6;
 }
 
@@ -282,7 +282,7 @@
 }
 
 .books-panel h2 {
-    color: #123B63;
+    color: #14532D;
     margin-top: 0;
     font-size: 21px;
 }
@@ -312,13 +312,13 @@
 
 .books-page input:focus {
     outline: none;
-    border-color: #2684C7;
-    box-shadow: 0 0 0 3px rgba(38,132,199,0.12);
+    border-color: #2E9E5B;
+    box-shadow: 0 0 0 3px rgba(46,158,91,0.12);
 }
 
 .books-submit {
     margin-top: 18px;
-    background: #123B63;
+    background: #14532D;
     color: #fff;
     border: none;
     padding: 12px 20px;
@@ -328,7 +328,7 @@
 }
 
 .books-submit:hover {
-    background: #2684C7;
+    background: #2E9E5B;
 }
 
 .books-notice {
@@ -361,7 +361,7 @@
 
 .books-toolbar h2 {
     margin: 0;
-    color: #123B63;
+    color: #14532D;
     font-size: 21px;
 }
 
@@ -381,14 +381,14 @@
     border: none;
     border-radius: 9px;
     padding: 0 17px;
-    background: #2684C7;
+    background: #2E9E5B;
     color: white;
     font-weight: 600;
     cursor: pointer;
 }
 
 .books-search button:hover {
-    background: #123B63;
+    background: #14532D;
 }
 
 .books-count {
@@ -409,8 +409,8 @@
 }
 
 .books-table th {
-    background: #f1f6fb;
-    color: #123B63;
+    background: #F1F8F3;
+    color: #14532D;
     text-align: left;
     padding: 14px;
     font-size: 13px;
@@ -424,7 +424,27 @@
 }
 
 .books-table tr:hover td {
-    background: #fafcff;
+    background: #FAFDFB;
+}
+
+.book-cover {
+    width: 48px;
+    height: 68px;
+    object-fit: cover;
+    border-radius: 6px;
+    border: 1px solid #e5edf5;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+    display: block;
+}
+
+.book-cover-placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #E3F3E8;
+    color: #14532D;
+    font-weight: 700;
+    font-size: 18px;
 }
 
 .availability {
@@ -487,12 +507,12 @@
 }
 
 .borrow-header {
-    background: linear-gradient(135deg, #123B63, #2684C7);
+    background: linear-gradient(135deg, #14532D, #2E9E5B);
     color: white;
     padding: 30px;
     border-radius: 18px;
     margin-bottom: 22px;
-    box-shadow: 0 8px 25px rgba(18,59,99,0.12);
+    box-shadow: 0 8px 25px rgba(20,83,45,0.12);
 }
 
 .borrow-header h1 {
@@ -502,7 +522,7 @@
 
 .borrow-header p {
     margin: 0;
-    color: #e8f3ff;
+    color: #E3F3E8;
     line-height: 1.6;
 }
 
@@ -517,7 +537,7 @@
 
 .borrow-panel h2 {
     margin-top: 0;
-    color: #123B63;
+    color: #14532D;
     font-size: 21px;
 }
 
@@ -553,14 +573,14 @@
 .borrow-page input:focus,
 .borrow-page select:focus {
     outline: none;
-    border-color: #2684C7;
-    box-shadow: 0 0 0 3px rgba(38,132,199,0.12);
+    border-color: #2E9E5B;
+    box-shadow: 0 0 0 3px rgba(46,158,91,0.12);
 }
 
 .borrow-submit {
     margin-top: 18px;
     border: none;
-    background: #123B63;
+    background: #14532D;
     color: white;
     padding: 12px 20px;
     border-radius: 9px;
@@ -569,7 +589,7 @@
 }
 
 .borrow-submit:hover {
-    background: #2684C7;
+    background: #2E9E5B;
 }
 
 .borrow-notice {
@@ -620,14 +640,14 @@
     border: none;
     border-radius: 9px;
     padding: 0 17px;
-    background: #2684C7;
+    background: #2E9E5B;
     color: white;
     font-weight: 600;
     cursor: pointer;
 }
 
 .borrow-search button:hover {
-    background: #123B63;
+    background: #14532D;
 }
 
 .borrow-count {
@@ -648,8 +668,8 @@
 }
 
 .borrow-table th {
-    background: #f1f6fb;
-    color: #123B63;
+    background: #F1F8F3;
+    color: #14532D;
     text-align: left;
     padding: 14px;
     font-size: 13px;
@@ -665,7 +685,7 @@
 }
 
 .borrow-table tr:hover td {
-    background: #fafcff;
+    background: #FAFDFB;
 }
 
 .status-badge {
@@ -678,7 +698,7 @@
 }
 
 .status-badge.borrowed {
-    background: #eaf4fc;
+    background: #E3F3E8;
     color: #1c6095;
 }
 
@@ -694,7 +714,7 @@
 
 .return-button {
     border: none;
-    background: #2684C7;
+    background: #2E9E5B;
     color: white;
     padding: 8px 12px;
     border-radius: 7px;
@@ -704,7 +724,7 @@
 }
 
 .return-button:hover {
-    background: #123B63;
+    background: #14532D;
 }
 
 .returned-label {
@@ -812,3 +832,115 @@ canvas { max-width: 100%; height: auto; }
 @media (max-width: 760px) {
     .form-row, .two-col { grid-template-columns: 1fr; }
 }
+
+/* ===== Background picture =====
+   To use your own photo: save it as images/bg.jpg (or .png / .webp)
+   and change the file name in --bg-image below. Nothing else is needed. */
+:root {
+    --bg-image: url("../images/bg.jpg");
+    --bg-overlay: rgba(244, 249, 245, .55);   /* 0 = picture fully visible, 1 = hidden */
+}
+
+body {
+    background-color: var(--background);
+    background-image:
+        linear-gradient(var(--bg-overlay), var(--bg-overlay)),
+        var(--bg-image);
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+}
+
+.site-name { background: rgba(255, 255, 255, .94); }
+.site-footer { background: rgba(255, 255, 255, .94); margin-top: 30px; }
+
+/* Home page hero: picture shown more strongly behind the title */
+.home-hero {
+    background-image:
+        linear-gradient(135deg, rgba(20,83,45, .94), rgba(46,158,91, .84)),
+        var(--bg-image);
+    background-size: cover;
+    background-position: center;
+}
+
+@media (max-width: 700px) {
+    body { background-attachment: scroll; }   /* fixed backgrounds are glitchy on phones */
+}
+
+/* ===== School green theme (gold accent) ===== */
+.site-header { border-bottom: 4px solid #C9A227; }
+.site-name { border-bottom: 1px solid #DDE8E0; letter-spacing: .3px; }
+.site-header .main-nav a:hover { background: rgba(201, 162, 39, .28); }
+.site-footer { border-top: 3px solid #C9A227; }
+
+/* ===== Force green everywhere (works even if style.css is the old one) ===== */
+:root {
+    --navy: #14532D;
+    --blue: #2E9E5B;
+    --blue-dark: #1F7A47;
+    --background: #F4F9F5;
+    --light-blue: #E8F5EC;
+}
+.site-header,
+header { background: #14532D; }
+.site-name,
+.site-name a { color: #14532D; }
+.site-header .main-nav a { color: #fff; }
+
+/* "What You Can Do" heading: readable on top of the background picture */
+.home-section-title {
+    display: inline-block;
+    background: rgba(255, 255, 255, .94);
+    color: #14532D;
+    padding: 8px 20px;
+    border-radius: 10px;
+    border-left: 5px solid #C9A227;
+    margin: 24px 0 14px;
+}
+
+/* ===== Softer look: deep green overlay + cream cards (less glare) ===== */
+:root {
+    --bg-overlay: rgba(10, 46, 28, .62);      /* dark green tint over the photo */
+    --cream: #FBF9F1;                          /* soft off-white for cards */
+    --cream-border: #E4E0CC;
+    --ink: #1E2B22;                            /* body text */
+    --ink-soft: #55645A;
+}
+
+.card, .form-card, .home-feature, .dashboard-card, .books-card {
+    background: var(--cream);
+    border: 1px solid var(--cream-border);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, .18);
+}
+
+.home-feature p, .card p { color: var(--ink-soft); }
+
+/* headings that sit directly on the photo become white */
+.home-section-title {
+    background: none;
+    border-left: 5px solid #C9A227;
+    border-radius: 0;
+    padding: 2px 0 2px 14px;
+    color: #fff;
+    text-shadow: 0 2px 6px rgba(0, 0, 0, .45);
+}
+
+.home-hero {
+    background-image:
+        linear-gradient(135deg, rgba(14, 62, 36, .93), rgba(30, 110, 66, .86)),
+        var(--bg-image);
+    border: 1px solid rgba(201, 162, 39, .55);
+}
+.home-primary { background: #C9A227; color: #14301E; }       /* gold main button */
+.home-primary:hover { background: #D8B23A; }
+
+.home-footer-note {
+    background: rgba(251, 249, 241, .92);
+    color: #3C4A40;
+    border: 1px solid var(--cream-border);
+}
+
+.site-name { background: var(--cream); color: #14532D; }
+.site-footer { background: #0F3A22; color: #DDE8E0; border-top: 3px solid #C9A227; }
+.site-footer a { color: #E9D27A; }
