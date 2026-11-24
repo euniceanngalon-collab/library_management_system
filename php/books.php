@@ -15,37 +15,42 @@ $_SESSION['role'] = $role;
 | ROLE RULES for this page
 |   student   : search and view only
 |   librarian : add, edit and delete books
-|   admin     : search and view only (the admin does not run the collection)
-| The server checks the role again on every POST, so hiding a button is never the only protection.
+|   admin     : search and view only
+| The server checks the role again on every POST.
 */
 $canManageBooks = ($role === 'librarian');
 
 $msg = '';
 $msgType = 'success';
 
-/* Returns an error message, or null when title, author, isbn and copies are valid. */
+/* Validate book details before saving. */
 function validate_book_input(string $title, string $author, string $isbn, string $copies): ?string
 {
     if ($title === '' || $author === '') {
         return 'Please enter both the book title and author.';
     }
+
     if (mb_strlen($title) > 200) {
         return 'Book title must be 200 characters or fewer.';
     }
+
     if (mb_strlen($author) > 150) {
         return 'Author must be 150 characters or fewer.';
     }
+
     if ($isbn !== '' && !preg_match('/^[0-9-]{10,17}$/', $isbn)) {
         return 'ISBN may contain digits and hyphens only (10 to 17 characters).';
     }
+
     if (!ctype_digit($copies) || (int)$copies < 1 || (int)$copies > 9999) {
         return 'Please enter a valid number of copies from 1 to 9999.';
     }
+
     return null;
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    require_csrf();   // rejects and logs CSRF_REJECTED when the token is missing or wrong
+    require_csrf();
 
     if (!$canManageBooks) {
         log_event('ACCESS_DENIED', 'Non-librarian tried to change books.', (int)$_SESSION['user_id']);
@@ -62,12 +67,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     try {
         if ($action === 'add') {
             $err = validate_book_input($title, $author, $isbn, $copies);
+
             if ($err !== null) {
                 throw new RuntimeException($err);
             }
+
             $n = (int)$copies;
+
             $pdo->prepare(
-                'INSERT INTO books (title, author, isbn, total_copies, available_copies) VALUES (?, ?, ?, ?, ?)'
+                'INSERT INTO books (title, author, isbn, total_copies, available_copies)
+                 VALUES (?, ?, ?, ?, ?)'
             )->execute([$title, $author, $isbn === '' ? null : $isbn, $n, $n]);
 
             log_event('BOOK_ADDED', 'Added book: ' . $title, (int)$_SESSION['user_id']);
@@ -76,30 +85,49 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         } elseif ($action === 'update') {
             $bookId = (int)($_POST['book_id'] ?? 0);
             $err = validate_book_input($title, $author, $isbn, $copies);
+
             if ($bookId <= 0) {
                 throw new RuntimeException('Invalid book.');
             }
+
             if ($err !== null) {
                 throw new RuntimeException($err);
             }
 
             $pdo->beginTransaction();
-            $stmt = $pdo->prepare('SELECT total_copies, available_copies FROM books WHERE id = ? FOR UPDATE');
+
+            $stmt = $pdo->prepare(
+                'SELECT total_copies, available_copies FROM books WHERE id = ? FOR UPDATE'
+            );
             $stmt->execute([$bookId]);
             $book = $stmt->fetch();
+
             if (!$book) {
                 throw new RuntimeException('Book not found.');
             }
 
-            $onLoan   = (int)$book['total_copies'] - (int)$book['available_copies'];
+            $onLoan = (int)$book['total_copies'] - (int)$book['available_copies'];
             $newTotal = (int)$copies;
+
             if ($newTotal < $onLoan) {
-                throw new RuntimeException("Total copies cannot be lower than the $onLoan copy/copies currently borrowed.");
+                throw new RuntimeException(
+                    "Total copies cannot be lower than the $onLoan copy/copies currently borrowed."
+                );
             }
 
             $pdo->prepare(
-                'UPDATE books SET title = ?, author = ?, isbn = ?, total_copies = ?, available_copies = ? WHERE id = ?'
-            )->execute([$title, $author, $isbn === '' ? null : $isbn, $newTotal, $newTotal - $onLoan, $bookId]);
+                'UPDATE books
+                 SET title = ?, author = ?, isbn = ?, total_copies = ?, available_copies = ?
+                 WHERE id = ?'
+            )->execute([
+                $title,
+                $author,
+                $isbn === '' ? null : $isbn,
+                $newTotal,
+                $newTotal - $onLoan,
+                $bookId
+            ]);
+
             $pdo->commit();
 
             log_event('BOOK_UPDATED', 'Book ID ' . $bookId, (int)$_SESSION['user_id']);
@@ -107,47 +135,61 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         } elseif ($action === 'delete') {
             $bookId = (int)($_POST['book_id'] ?? 0);
+
             if ($bookId <= 0) {
                 throw new RuntimeException('Invalid book.');
             }
 
-            $stmt = $pdo->prepare('SELECT COUNT(*) FROM borrowing_transactions WHERE book_id = ?');
+            $stmt = $pdo->prepare(
+                'SELECT COUNT(*) FROM borrowing_transactions WHERE book_id = ?'
+            );
             $stmt->execute([$bookId]);
+
             if ((int)$stmt->fetchColumn() > 0) {
-                throw new RuntimeException('This book has borrowing records and cannot be deleted.');
+                throw new RuntimeException(
+                    'This book has borrowing records and cannot be deleted.'
+                );
             }
 
             $pdo->prepare('DELETE FROM books WHERE id = ?')->execute([$bookId]);
+
             log_event('BOOK_DELETED', 'Book ID ' . $bookId, (int)$_SESSION['user_id']);
             $msg = 'Book deleted.';
 
         } else {
             throw new RuntimeException('Unknown action.');
         }
+
     } catch (Throwable $e) {
         if ($pdo->inTransaction()) {
             $pdo->rollBack();
         }
+
         if ($e instanceof RuntimeException) {
             $msg = $e->getMessage();
         } else {
             error_log('Book error: ' . $e->getMessage());
             $msg = 'Unable to save the change. Please try again.';
         }
+
         $msgType = 'error';
     }
 }
 
-// Search books by title, author or ISBN
+/* Search books by title, author or ISBN. */
 $search = trim((string)($_GET['search'] ?? ''));
 
 if ($search !== '') {
     $stmt = $pdo->prepare(
-        'SELECT * FROM books WHERE title LIKE ? OR author LIKE ? OR isbn LIKE ? ORDER BY title'
+        'SELECT * FROM books
+         WHERE title LIKE ? OR author LIKE ? OR isbn LIKE ?
+         ORDER BY title'
     );
+
     $term = '%' . $search . '%';
     $stmt->execute([$term, $term, $term]);
     $books = $stmt->fetchAll();
+
 } else {
     $books = $pdo->query('SELECT * FROM books ORDER BY title')->fetchAll();
 }
@@ -156,6 +198,7 @@ $totalBooks = count($books);
 
 page_start('Books');
 ?>
+
 <div class="books-page">
 
     <section class="books-header">
@@ -185,19 +228,26 @@ page_start('Books');
                 <div class="books-form-grid">
                     <div>
                         <label for="title">Book Title<span class="req">*</span></label>
-                        <input type="text" id="title" name="title" maxlength="200" placeholder="Enter book title" required>
+                        <input type="text" id="title" name="title" maxlength="200"
+                               placeholder="Enter book title" required>
                     </div>
+
                     <div>
                         <label for="author">Author<span class="req">*</span></label>
-                        <input type="text" id="author" name="author" maxlength="150" placeholder="Enter author's name" required>
+                        <input type="text" id="author" name="author" maxlength="150"
+                               placeholder="Enter author's name" required>
                     </div>
+
                     <div>
                         <label for="isbn">ISBN <span class="opt">optional</span></label>
-                        <input type="text" id="isbn" name="isbn" maxlength="17" placeholder="978-0-00-000000-0">
+                        <input type="text" id="isbn" name="isbn" maxlength="17"
+                               placeholder="978-0-00-000000-0">
                     </div>
+
                     <div>
                         <label for="copies">Number of Copies<span class="req">*</span></label>
-                        <input type="number" id="copies" name="copies" min="1" max="9999" value="1" required>
+                        <input type="number" id="copies" name="copies" min="1" max="9999"
+                               value="1" required>
                     </div>
                 </div>
 
@@ -211,7 +261,8 @@ page_start('Books');
             <h2>Book Collection</h2>
 
             <form method="get" class="books-search">
-                <input type="search" name="search" placeholder="Search title, author or ISBN..."
+                <input type="search" name="search"
+                       placeholder="Search title, author or ISBN..."
                        value="<?= e($search) ?>" aria-label="Search books">
                 <button type="submit">Search</button>
             </form>
@@ -224,42 +275,35 @@ page_start('Books');
                 <table class="books-table">
                     <thead>
                         <tr>
-                            <th>Cover</th>
                             <th>Book Title</th>
                             <th>Author</th>
                             <th>ISBN</th>
                             <th>Total Copies</th>
                             <th>Available</th>
                             <th>Status</th>
-                            <?php if ($canManageBooks): ?><th>Manage</th><?php endif; ?>
+                            <?php if ($canManageBooks): ?>
+                                <th>Manage</th>
+                            <?php endif; ?>
                         </tr>
                     </thead>
+
                     <tbody>
                         <?php foreach ($books as $book): ?>
                             <?php $available = (int)$book['available_copies']; ?>
-                            <?php
-                                $isbnDigits = preg_replace('/[^0-9Xx]/', '', (string)($book['isbn'] ?? ''));
-                                $coverUrl = $isbnDigits !== '' ? 'https://covers.openlibrary.org/b/isbn/' . rawurlencode($isbnDigits) . '-M.jpg' : null;
-                            ?>
+
                             <tr>
                                 <td>
-                                    <?php if ($coverUrl): ?>
-                                        <img
-                                            class="book-cover"
-                                            src="<?= e($coverUrl) ?>"
-                                            alt="Cover of <?= e($book['title']) ?>"
-                                            loading="lazy"
-                                            onerror="this.onerror=null;this.replaceWith(Object.assign(document.createElement('div'),{className:'book-cover book-cover-placeholder',textContent:<?= json_encode(mb_substr($book['title'], 0, 1)) ?>}));"
-                                        >
-                                    <?php else: ?>
-                                        <div class="book-cover book-cover-placeholder"><?= e(mb_substr($book['title'], 0, 1)) ?></div>
-                                    <?php endif; ?>
+                                    <strong><?= e($book['title']) ?></strong>
                                 </td>
-                                <td><strong><?= e($book['title']) ?></strong></td>
+
                                 <td><?= e($book['author']) ?></td>
+
                                 <td><?= e($book['isbn'] ?? '—') ?></td>
+
                                 <td><?= (int)$book['total_copies'] ?></td>
+
                                 <td><?= $available ?></td>
+
                                 <td>
                                     <?php if ($available > 0): ?>
                                         <span class="availability available">Available</span>
@@ -272,26 +316,44 @@ page_start('Books');
                                     <td>
                                         <details>
                                             <summary>Edit</summary>
+
                                             <form method="post">
                                                 <?= csrf_field() ?>
                                                 <input type="hidden" name="action" value="update">
-                                                <input type="hidden" name="book_id" value="<?= (int)$book['id'] ?>">
+                                                <input type="hidden" name="book_id"
+                                                       value="<?= (int)$book['id'] ?>">
 
                                                 <label for="t<?= (int)$book['id'] ?>">Title</label>
-                                                <input type="text" id="t<?= (int)$book['id'] ?>" name="title" maxlength="200"
-                                                       value="<?= e($book['title']) ?>" required>
+                                                <input type="text"
+                                                       id="t<?= (int)$book['id'] ?>"
+                                                       name="title"
+                                                       maxlength="200"
+                                                       value="<?= e($book['title']) ?>"
+                                                       required>
 
                                                 <label for="a<?= (int)$book['id'] ?>">Author</label>
-                                                <input type="text" id="a<?= (int)$book['id'] ?>" name="author" maxlength="150"
-                                                       value="<?= e($book['author']) ?>" required>
+                                                <input type="text"
+                                                       id="a<?= (int)$book['id'] ?>"
+                                                       name="author"
+                                                       maxlength="150"
+                                                       value="<?= e($book['author']) ?>"
+                                                       required>
 
                                                 <label for="i<?= (int)$book['id'] ?>">ISBN</label>
-                                                <input type="text" id="i<?= (int)$book['id'] ?>" name="isbn" maxlength="17"
+                                                <input type="text"
+                                                       id="i<?= (int)$book['id'] ?>"
+                                                       name="isbn"
+                                                       maxlength="17"
                                                        value="<?= e($book['isbn'] ?? '') ?>">
 
                                                 <label for="c<?= (int)$book['id'] ?>">Total copies</label>
-                                                <input type="number" id="c<?= (int)$book['id'] ?>" name="copies" min="1" max="9999"
-                                                       value="<?= (int)$book['total_copies'] ?>" required>
+                                                <input type="number"
+                                                       id="c<?= (int)$book['id'] ?>"
+                                                       name="copies"
+                                                       min="1"
+                                                       max="9999"
+                                                       value="<?= (int)$book['total_copies'] ?>"
+                                                       required>
 
                                                 <button type="submit" class="books-submit">Save</button>
                                             </form>
@@ -299,21 +361,26 @@ page_start('Books');
                                             <form method="post">
                                                 <?= csrf_field() ?>
                                                 <input type="hidden" name="action" value="delete">
-                                                <input type="hidden" name="book_id" value="<?= (int)$book['id'] ?>">
+                                                <input type="hidden" name="book_id"
+                                                       value="<?= (int)$book['id'] ?>">
                                                 <button type="submit" class="return-button">Delete</button>
                                             </form>
                                         </details>
                                     </td>
                                 <?php endif; ?>
                             </tr>
+
                         <?php endforeach; ?>
                     </tbody>
                 </table>
             </div>
+
         <?php else: ?>
             <div class="books-empty">
                 <strong>No books found.</strong>
-                <?= $search !== '' ? 'Try another title, author or ISBN.' : 'There are currently no books in the collection.' ?>
+                <?= $search !== ''
+                    ? 'Try another title, author or ISBN.'
+                    : 'There are currently no books in the collection.' ?>
             </div>
         <?php endif; ?>
     </section>
