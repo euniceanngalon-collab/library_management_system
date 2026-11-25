@@ -10,7 +10,7 @@ const REG_FIELDS = [
     'student_id', 'first_name', 'middle_name', 'last_name', 'extension_choice',
     'other_extension', 'birthdate', 'street', 'barangay', 'city', 'province',
     'country', 'postal_code', 'email', 'username', 'academic_program',
-    'year_level', 'student_status', 'emergency_contact', 'subject_interests',
+    'year_level', 'student_status', 'emergency_contact',
     'question1', 'question2', 'question3', 'answer1', 'answer2', 'answer3',
 ];
 
@@ -64,7 +64,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $errors['year_level'] = validate_dropdown($v['year_level'], YEAR_LEVEL_LIST, 'Please select a valid year level.');
         $errors['student_status'] = validate_dropdown($v['student_status'], STUDENT_STATUS_LIST, 'Please select a valid student status.');
         $errors['emergency_contact'] = validate_emergency_contact($v['emergency_contact']);
-        $errors['subject_interests'] = validate_subject_interests($v['subject_interests']);
 
         $chosen = [$v['question1'], $v['question2'], $v['question3']];
         foreach (validate_question_choices($chosen) as $i => $message) {
@@ -123,7 +122,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $v['student_id'], $v['first_name'], $v['middle_name'] ?: null, $v['last_name'], $extension,
                     $v['birthdate'], $age, $emailLower, $v['username'], $passwordHash, $card,
                     $v['academic_program'], $v['year_level'], $v['student_status'],
-                    $contactEnc, $contactIv, $v['subject_interests'] ?: null,
+                    $contactEnc, $contactIv, null,
                     $v['street'], $v['barangay'], $v['city'], $v['province'], $v['country'], $v['postal_code'],
                 ]);
                 $userId = (int)$pdo->lastInsertId();
@@ -216,10 +215,10 @@ page_start('Register', ['validate.js', 'register.js'], true);
         </div>
 
         <h2>Personal information</h2>
-        <?php reg_input('student_id', 'ID Number', true, $v, $errors, ['placeholder' => 'xxxx-xxxx', 'maxlength' => '9']); ?>
-        <?php reg_input('first_name', 'First Name', true, $v, $errors, ['maxlength' => (string)MAX_NAME_LENGTH]); ?>
-        <?php reg_input('middle_name', 'Middle Name', false, $v, $errors, ['maxlength' => (string)MAX_NAME_LENGTH]); ?>
-        <?php reg_input('last_name', 'Family Name', true, $v, $errors, ['maxlength' => (string)MAX_NAME_LENGTH]); ?>
+        <?php reg_input('student_id', 'ID Number', true, $v, $errors, ['placeholder' => 'e.g. 2026-0001', 'maxlength' => '9']); ?>
+<?php reg_input('first_name', 'First Name', true, $v, $errors, ['placeholder' => 'Enter your first name', 'maxlength' => (string)MAX_NAME_LENGTH]); ?>
+<?php reg_input('middle_name', 'Middle Name', false, $v, $errors, ['placeholder' => 'Enter your middle name (optional)', 'maxlength' => (string)MAX_NAME_LENGTH]); ?>
+<?php reg_input('last_name', 'Family Name', true, $v, $errors, ['placeholder' => 'Enter your family name', 'maxlength' => (string)MAX_NAME_LENGTH]); ?>
 
         <div class="form-group">
             <?= field_label('extension_choice', 'Name Extension', false) ?>
@@ -242,35 +241,30 @@ page_start('Register', ['validate.js', 'register.js'], true);
         </div>
 
         <h2>Address</h2>
-        <?php reg_input('street', 'Purok / Street', true, $v, $errors, ['maxlength' => '50']); ?>
-        <?php reg_input('barangay', 'Barangay', true, $v, $errors, ['maxlength' => '50']); ?>
-        <?php reg_input('city', 'Municipality / City', true, $v, $errors, ['maxlength' => '50']); ?>
-        <?php reg_input('province', 'Province', true, $v, $errors, ['maxlength' => '50']); ?>
-        <?php reg_input('country', 'Country', true, $v, $errors, ['maxlength' => '50']); ?>
-        <?php reg_input('postal_code', 'ZIP Code', true, $v, $errors, ['maxlength' => '4', 'inputmode' => 'numeric']); ?>
+       <?php reg_input('street', 'Purok / Street', true, $v, $errors, ['placeholder' => 'Enter your purok or street', 'maxlength' => '50']); ?>
+<?php reg_input('barangay', 'Barangay', true, $v, $errors, ['placeholder' => 'Enter your barangay', 'maxlength' => '50']); ?>
+<?php reg_input('city', 'Municipality / City', true, $v, $errors, ['placeholder' => 'Enter your municipality or city', 'maxlength' => '50']); ?>
+<?php reg_input('province', 'Province', true, $v, $errors, ['placeholder' => 'Enter your province', 'maxlength' => '50']); ?>
+<?php reg_input('country', 'Country', true, $v, $errors, ['placeholder' => 'e.g. Philippines', 'maxlength' => '50']); ?>
+<?php reg_input('postal_code', 'ZIP Code', true, $v, $errors, ['placeholder' => 'Enter ZIP code', 'maxlength' => '4', 'inputmode' => 'numeric']); ?>
 
         <h2>Library information</h2>
-        <?php reg_select('academic_program', 'Academic Program', PROGRAM_LIST, $v, $errors); ?>
-        <?php reg_select('year_level', 'Year Level', YEAR_LEVEL_LIST, $v, $errors); ?>
-        <?php reg_select('student_status', 'Student Status', STUDENT_STATUS_LIST, $v, $errors); ?>
-        <?php reg_input('emergency_contact', 'Emergency Contact Number', true, $v, $errors, ['placeholder' => '09xxxxxxxxx', 'maxlength' => '11', 'inputmode' => 'numeric']); ?>
-        <?php reg_input('subject_interests', 'Subjects of Interest', false, $v, $errors, ['maxlength' => '100', 'placeholder' => 'e.g. Networking, Databases']); ?>
+        <?php reg_input('emergency_contact', 'Emergency Contact Number', true, $v, $errors, ['placeholder' => 'e.g. 09123456789', 'maxlength' => '11', 'inputmode' => 'numeric']); ?>
 
         <h2>Account</h2>
-        <?php reg_input('email', 'Email', true, $v, $errors, ['type' => 'email', 'maxlength' => '100']); ?>
-        <?php reg_input('username', 'Username', true, $v, $errors, ['maxlength' => (string)MAX_USERNAME_LENGTH]); ?>
-        <small class="hint" id="username-status"></small>
+        <?php reg_input('email', 'Email', true, $v, $errors, ['type' => 'email', 'placeholder' => 'e.g. student@gmail.com', 'maxlength' => '100']); ?>
+<?php reg_input('username', 'Username', true, $v, $errors, ['placeholder' => 'Choose a username', 'maxlength' => (string)MAX_USERNAME_LENGTH]); ?>
 
         <div class="form-group">
             <?= field_label('password', 'Password', true) ?>
-            <input type="password" id="password" name="password" maxlength="<?= MAX_PASSWORD_LENGTH ?>" autocomplete="new-password">
+            <input type="password" id="password" name="password" maxlength="<?= MAX_PASSWORD_LENGTH ?>" autocomplete="new-password" placeholder="Enter your password">
             <div class="strength" id="strength-box"><div class="strength-bar" id="strength-bar"></div></div>
             <small class="hint" id="strength-label">Strength: -</small>
             <?= field_error($errors, 'password') ?>
         </div>
         <div class="form-group">
             <?= field_label('confirm_password', 'Re-enter Password', true) ?>
-            <input type="password" id="confirm_password" name="confirm_password" maxlength="<?= MAX_PASSWORD_LENGTH ?>" autocomplete="new-password">
+            <input type="password" id="confirm_password" name="confirm_password" maxlength="<?= MAX_PASSWORD_LENGTH ?>" autocomplete="new-password" placeholder="Re-enter your password">
             <?= field_error($errors, 'confirm_password') ?>
         </div>
         <label class="inline-check"><input type="checkbox" id="show-password"> Show Password</label>
@@ -290,7 +284,7 @@ page_start('Register', ['validate.js', 'register.js'], true);
             </div>
             <div class="form-group">
                 <?= field_label('answer' . $n, 'Answer ' . $n, true) ?>
-                <input type="text" id="answer<?= $n ?>" name="answer<?= $n ?>" value="<?= old($v, 'answer' . $n) ?>" maxlength="50" autocomplete="off">
+                <input type="text" id="answer<?= $n ?>" name="answer<?= $n ?>" value="<?= old($v, 'answer' . $n) ?>" maxlength="50" autocomplete="off" placeholder="Enter your answer">
                 <?= field_error($errors, 'answer' . $n) ?>
             </div>
         <?php endfor; ?>

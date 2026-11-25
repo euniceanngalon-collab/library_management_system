@@ -23,7 +23,6 @@ page_start('Privacy Notice');
             <tr><td>Three security answers (stored as hashes)</td><td>Personal</td><td>Lets the borrower recover a forgotten password.</td></tr>
             <tr><td>Academic program, year level, student status</td><td>Personal; educational record</td><td>Decides who may borrow and for how long.</td></tr>
             <tr><td>Emergency contact number (encrypted, AES-256)</td><td>Personal</td><td>Reaches someone if the borrower cannot be contacted.</td></tr>
-            <tr><td>Subjects of interest (optional)</td><td>Personal</td><td>Helps the library suggest books. You may leave it blank.</td></tr>
             <tr><td>Activity log: time, IP address, browser</td><td>Personal</td><td>Detects attacks on accounts and keeps accountability.</td></tr>
             <tr><td>Borrowing records</td><td>Personal</td><td>Tracks which book is with which borrower.</td></tr>
         </tbody>
